@@ -1,15 +1,19 @@
 package com.hackathon.apartxhackathon.service;
 
 import com.hackathon.apartxhackathon.config.JwtService;
+import com.hackathon.apartxhackathon.exception.IncorrectVerificationCodeException;
+import com.hackathon.apartxhackathon.exception.UserAlreadyExistsException;
+import com.hackathon.apartxhackathon.exception.UserNotFoundException;
 import com.hackathon.apartxhackathon.request.AuthenticationRequest;
 import com.hackathon.apartxhackathon.request.RegisterRequest;
+import com.hackathon.apartxhackathon.request.VerifyEmailRequest;
 import com.hackathon.apartxhackathon.response.AuthenticationResponse;
 import com.hackathon.apartxhackathon.token.Token;
 import com.hackathon.apartxhackathon.token.TokenRepository;
 import com.hackathon.apartxhackathon.token.TokenType;
 import com.hackathon.apartxhackathon.user.Role;
 import com.hackathon.apartxhackathon.user.User;
-import com.hackathon.apartxhackathon.user.UserRepository;
+import com.hackathon.apartxhackathon.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +28,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -33,23 +38,43 @@ public class AuthenticationService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
+  private final EmailService emailService;
 
-  public AuthenticationResponse register(RegisterRequest request) {
+  public User register(RegisterRequest request) throws UserAlreadyExistsException {
+    if (repository.findByEmail(request.getEmail()).isPresent()){
+      throw new UserAlreadyExistsException();
+    }
     var user = User.builder()
-        .firstname(request.getFirstname())
-        .lastname(request.getLastname())
-        .email(request.getEmail())
-        .password(passwordEncoder.encode(request.getPassword()))
-        .role(request.getRole())
-        .build();
-    var savedUser = repository.save(user);
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .role(request.getRole())
+            .code(generateRandomCode())
+            .approved(false)
+            .build();
+    if (request.getRole() == Role.CLEANER){
+      //TODO
+    }
+    if (request.getRole() == Role.LANDLORD){
+      //TODO
+    }
+    emailService.sendAuthorizationCode(user.getEmail(), user.getCode());
+    return repository.save(user);
+  }
+
+  public AuthenticationResponse verify(VerifyEmailRequest request) throws UserNotFoundException, IncorrectVerificationCodeException {
+    User user = repository.findByEmail(request.getEmail()).orElseThrow(UserNotFoundException::new);
+    if (!request.getCode().equals(user.getCode())) {
+      throw new IncorrectVerificationCodeException();
+    }
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
-    saveUserToken(savedUser, jwtToken);
+    saveUserToken(user, jwtToken);
     return AuthenticationResponse.builder()
-        .accessToken(jwtToken)
+            .accessToken(jwtToken)
             .refreshToken(refreshToken)
-        .build();
+            .build();
+
+
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -69,6 +94,18 @@ public class AuthenticationService {
         .accessToken(jwtToken)
             .refreshToken(refreshToken)
         .build();
+  }
+
+  public static String generateRandomCode() {
+    SecureRandom secureRandom = new SecureRandom();
+    StringBuilder code = new StringBuilder();
+
+    for (int i = 0; i < 4; i++) {
+      int digit = secureRandom.nextInt(10); // Generate a random digit between 0 and 9
+      code.append(digit);
+    }
+
+    return code.toString();
   }
 
   private void saveUserToken(User user, String jwtToken) {
@@ -120,4 +157,6 @@ public class AuthenticationService {
       }
     }
   }
+
+
 }

@@ -34,6 +34,8 @@ public class User implements UserDetails {
 
   @Enumerated(EnumType.STRING)
   private Role role;
+  private String code;
+  private Boolean approved;
 
   @OneToMany(mappedBy = "user")
   private List<Token> tokens;

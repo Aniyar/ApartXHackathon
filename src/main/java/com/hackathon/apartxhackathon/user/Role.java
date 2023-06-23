@@ -9,14 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.hackathon.apartxhackathon.user.Permission.ADMIN_CREATE;
-import static com.hackathon.apartxhackathon.user.Permission.ADMIN_DELETE;
-import static com.hackathon.apartxhackathon.user.Permission.ADMIN_READ;
-import static com.hackathon.apartxhackathon.user.Permission.ADMIN_UPDATE;
-import static com.hackathon.apartxhackathon.user.Permission.CLEANER_CREATE;
-import static com.hackathon.apartxhackathon.user.Permission.CLEANER_DELETE;
-import static com.hackathon.apartxhackathon.user.Permission.CLEANER_READ;
-import static com.hackathon.apartxhackathon.user.Permission.CLEANER_UPDATE;
+import static com.hackathon.apartxhackathon.user.Permission.*;
 
 @RequiredArgsConstructor
 public enum Role {
@@ -37,9 +30,16 @@ public enum Role {
                   CLEANER_DELETE,
                   CLEANER_CREATE
           )
-  )
+  ),
 
-  ;
+  LANDLORD(
+          Set.of(
+                LANDLORD_READ,
+                LANDLORD_UPDATE,
+                LANDLORD_DELETE,
+                LANDLORD_CREATE
+          )
+  );
 
   @Getter
   private final Set<Permission> permissions;

@@ -1,8 +1,13 @@
 package com.hackathon.apartxhackathon.controller;
 
+import com.hackathon.apartxhackathon.exception.IncorrectVerificationCodeException;
+import com.hackathon.apartxhackathon.exception.UserAlreadyExistsException;
+import com.hackathon.apartxhackathon.exception.UserNotFoundException;
 import com.hackathon.apartxhackathon.request.AuthenticationRequest;
 import com.hackathon.apartxhackathon.request.RegisterRequest;
+import com.hackathon.apartxhackathon.request.VerifyEmailRequest;
 import com.hackathon.apartxhackathon.response.AuthenticationResponse;
+import com.hackathon.apartxhackathon.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +29,17 @@ public class AuthenticationController {
   private final AuthenticationService service;
 
   @PostMapping("/register")
-  public ResponseEntity<AuthenticationResponse> register(
+  public ResponseEntity<User> register(
       @RequestBody RegisterRequest request
-  ) {
+  ) throws UserAlreadyExistsException {
     return ResponseEntity.ok(service.register(request));
+  }
+
+  @PostMapping("/verify")
+  public ResponseEntity<AuthenticationResponse> verify(
+          @RequestBody VerifyEmailRequest request
+  ) throws IncorrectVerificationCodeException, UserNotFoundException {
+    return ResponseEntity.ok(service.verify(request));
   }
   @PostMapping("/authenticate")
   public ResponseEntity<AuthenticationResponse> authenticate(

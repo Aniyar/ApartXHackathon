@@ -16,29 +16,25 @@ public class ApartXHackathonApplication {
     public static void main(String[] args) {
         SpringApplication.run(ApartXHackathonApplication.class, args);
     }
-    @Bean
-    public CommandLineRunner commandLineRunner(
-            AuthenticationService service
-    ) {
-        return args -> {
-            var admin = RegisterRequest.builder()
-                    .firstname("Admin")
-                    .lastname("Admin")
-                    .email("admin@mail.com")
-                    .password("password")
-                    .role(ADMIN)
-                    .build();
-            System.out.println("Admin token: " + service.register(admin).getAccessToken());
-
-            var cleaner = RegisterRequest.builder()
-                    .firstname("Admin")
-                    .lastname("Admin")
-                    .email("CLEANER@mail.com")
-                    .password("password")
-                    .role(CLEANER)
-                    .build();
-            System.out.println("CLEANER token: " + service.register(cleaner).getAccessToken());
-
-        };
-    }
+//    @Bean
+//    public CommandLineRunner commandLineRunner(
+//            AuthenticationService service
+//    ) {
+//        return args -> {
+//            var admin = RegisterRequest.builder()
+//                    .email("aniyar.durmagambetova@nu.edu.kz")
+//                    .password("password")
+//                    .role(ADMIN)
+//                    .build();
+//            System.out.println("Admin (aniyar) token: " + service.register(admin).getAccessToken());
+//
+//            var cleaner = RegisterRequest.builder()
+//                    .email("durmagambetovaa4@gmail.com")
+//                    .password("password")
+//                    .role(CLEANER)
+//                    .build();
+//            System.out.println("CLEANER token: " + service.register(cleaner).getAccessToken());
+//
+//        };
+//    }
 }

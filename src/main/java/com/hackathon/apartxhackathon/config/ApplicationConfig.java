@@ -1,6 +1,6 @@
 package com.hackathon.apartxhackathon.config;
 
-import com.hackathon.apartxhackathon.user.UserRepository;
+import com.hackathon.apartxhackathon.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

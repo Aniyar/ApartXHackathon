@@ -1,6 +1,6 @@
 package com.hackathon.apartxhackathon.request;
 
-import com.hackathon.apartxhackathon.user.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-  private String email;
-  private String password;
-  private Role role;
+public class VerifyEmailRequest {
+    private String email;
+    String code;
 }
