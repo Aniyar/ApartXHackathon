@@ -32,7 +32,7 @@ public class LandLordController {
     private final LandLordService service;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('landlord:read')")
+    @PreAuthorize("hasAuthority('landlord:create')")
     public ResponseEntity<Iterable<Apartment>> getApartments(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException, LandLordNotFoundException {
         return ResponseEntity.ok(service.getApartments(userDetails));
     }

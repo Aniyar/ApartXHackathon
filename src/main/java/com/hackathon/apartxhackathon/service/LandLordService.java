@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.management.ServiceNotFoundException;
 import java.time.LocalDateTime;
@@ -66,7 +67,7 @@ public class LandLordService {
     public Iterable<Apartment> getApartments(UserDetails userDetails) throws LandLordNotFoundException, UserNotFoundException {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
         LandLord landLord = llRepository.findByUser_Id(user.getId()).orElseThrow(LandLordNotFoundException::new);
-        return aptRepository.findAllByLandLord(landLord);
+        return aptRepository.findAllByLandLord_Id(landLord.getId());
     }
 
 	public void postOrder(UserDetails userDetails, CreateOrderRequest request) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException {
