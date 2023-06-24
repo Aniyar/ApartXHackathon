@@ -9,6 +9,7 @@ import com.hackathon.apartxhackathon.model.LandLord;
 import com.hackathon.apartxhackathon.repository.LandLordRepository;
 import com.hackathon.apartxhackathon.repository.UserRepository;
 import com.hackathon.apartxhackathon.request.CreateApartmentRequest;
+import com.hackathon.apartxhackathon.request.CreateOrderRequest;
 import com.hackathon.apartxhackathon.service.LandLordService;
 import com.hackathon.apartxhackathon.user.User;
 import lombok.AllArgsConstructor;
@@ -46,6 +47,13 @@ public class LandLordController {
     @PreAuthorize("hasAuthority('landlord:delete')")
     public ResponseEntity addApartment(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Integer apartmentId) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException  {
         return service.deleteApartment(userDetails, apartmentId);
+    }
+
+    @PostMapping("/post_order")
+    @PreAuthorize("hasAuthority('landlord:create')")
+    public ResponseEntity postOrder(@AuthenticationPrincipal UserDetails userDetails, @RequestBody CreateOrderRequest request) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException {
+        service.postOrder(userDetails, request);
+        return ResponseEntity.ok().build();
     }
 
 //    @PutMapping("/edit_apartment")

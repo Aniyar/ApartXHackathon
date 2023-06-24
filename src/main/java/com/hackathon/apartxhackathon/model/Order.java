@@ -35,7 +35,7 @@ public class Order {
     @ManyToMany
     private List<ServiceType> serviceTypeList;
 
-    private BigDecimal desiredPrice;
+    private Integer desiredPrice;
     private LocalDateTime dateAndTime;
 
     private Integer landLordRating;

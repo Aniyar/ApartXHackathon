@@ -30,8 +30,11 @@ public class Apartment {
 
     @NotNull
     private Integer area;
+
+    @NotNull
     private Integer roomNumber;
 
+    @NotNull
     private String description;
 
     // Constructors, getters, and setters
