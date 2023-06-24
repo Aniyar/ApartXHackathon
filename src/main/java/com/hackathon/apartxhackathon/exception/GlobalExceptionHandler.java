@@ -27,6 +27,24 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler({ LandLordNotFoundException.class})
+    public final ResponseEntity<ErrorResponse> handleLandLordNotFoundException(LandLordNotFoundException ex){
+        ErrorResponse er = new ErrorResponse(ex.getClass().getName(), HttpStatus.NOT_FOUND.toString(), ex.getMessage(), null);
+        return new ResponseEntity<>(er, HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler({ CityNotFoundException.class})
+    public final ResponseEntity<ErrorResponse> handleCityNotFoundException(CityNotFoundException ex){
+        ErrorResponse er = new ErrorResponse(ex.getClass().getName(), HttpStatus.NOT_FOUND.toString(), ex.getMessage(), null);
+        return new ResponseEntity<>(er, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({ ApartmentNotFoundException.class})
+    public final ResponseEntity<ErrorResponse> handleApartmentNotFoundException(ApartmentNotFoundException ex){
+        ErrorResponse er = new ErrorResponse(ex.getClass().getName(), HttpStatus.NOT_FOUND.toString(), ex.getMessage(), null);
+        return new ResponseEntity<>(er, HttpStatus.NOT_FOUND);
+    }
 
 
 }

@@ -4,6 +4,10 @@ import com.hackathon.apartxhackathon.config.JwtService;
 import com.hackathon.apartxhackathon.exception.IncorrectVerificationCodeException;
 import com.hackathon.apartxhackathon.exception.UserAlreadyExistsException;
 import com.hackathon.apartxhackathon.exception.UserNotFoundException;
+import com.hackathon.apartxhackathon.model.Cleaner;
+import com.hackathon.apartxhackathon.model.LandLord;
+import com.hackathon.apartxhackathon.repository.CleanerRepository;
+import com.hackathon.apartxhackathon.repository.LandLordRepository;
 import com.hackathon.apartxhackathon.request.AuthenticationRequest;
 import com.hackathon.apartxhackathon.request.RegisterRequest;
 import com.hackathon.apartxhackathon.request.VerifyEmailRequest;
@@ -34,6 +38,9 @@ import java.security.SecureRandom;
 @RequiredArgsConstructor
 public class AuthenticationService {
   private final UserRepository repository;
+    private final LandLordRepository llRepository;
+    private final CleanerRepository cleanerRepository;
+
   private final TokenRepository tokenRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
@@ -51,12 +58,6 @@ public class AuthenticationService {
             .code(generateRandomCode())
             .approved(false)
             .build();
-    if (request.getRole() == Role.CLEANER){
-      //TODO
-    }
-    if (request.getRole() == Role.LANDLORD){
-      //TODO
-    }
     emailService.sendAuthorizationCode(user.getEmail(), user.getCode());
     return repository.save(user);
   }
@@ -66,6 +67,22 @@ public class AuthenticationService {
     if (!request.getCode().equals(user.getCode())) {
       throw new IncorrectVerificationCodeException();
     }
+    user.setApproved(true);
+    repository.save(user);
+
+      if (user.getRole() == Role.CLEANER){
+          Cleaner cleaner = Cleaner.builder()
+                  .user(user)
+                  .build();
+          cleanerRepository.save(cleaner);
+      }
+
+      if (user.getRole() == Role.LANDLORD){
+          LandLord landLord = LandLord.builder()
+                  .user(user)
+                  .build();
+          llRepository.save(landLord);
+      }
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
     saveUserToken(user, jwtToken);
@@ -73,8 +90,6 @@ public class AuthenticationService {
             .accessToken(jwtToken)
             .refreshToken(refreshToken)
             .build();
-
-
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {

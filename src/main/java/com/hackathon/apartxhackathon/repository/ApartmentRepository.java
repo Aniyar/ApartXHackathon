@@ -2,13 +2,8 @@ package com.hackathon.apartxhackathon.repository;
 
 import com.hackathon.apartxhackathon.model.Apartment;
 import com.hackathon.apartxhackathon.model.LandLord;
-import com.hackathon.apartxhackathon.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
-public interface LandLordRepository extends JpaRepository<LandLord, Integer> {
-    Optional<LandLord> findByUser(User user);
-
-
+public interface ApartmentRepository extends JpaRepository<Apartment, Integer> {
+	Iterable<Apartment> findAllByLandLord(LandLord landLord);
 }

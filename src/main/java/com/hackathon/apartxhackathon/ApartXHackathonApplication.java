@@ -1,14 +1,17 @@
 package com.hackathon.apartxhackathon;
 
+import com.hackathon.apartxhackathon.config.JwtService;
+import com.hackathon.apartxhackathon.exception.UserAlreadyExistsException;
+import com.hackathon.apartxhackathon.repository.UserRepository;
 import com.hackathon.apartxhackathon.request.RegisterRequest;
 import com.hackathon.apartxhackathon.service.AuthenticationService;
+import com.hackathon.apartxhackathon.user.User;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import static com.hackathon.apartxhackathon.user.Role.ADMIN;
-import static com.hackathon.apartxhackathon.user.Role.CLEANER;
 
 @SpringBootApplication
 public class ApartXHackathonApplication {
@@ -18,22 +21,25 @@ public class ApartXHackathonApplication {
     }
 //    @Bean
 //    public CommandLineRunner commandLineRunner(
-//            AuthenticationService service
-//    ) {
+//            AuthenticationService service,
+//            UserRepository repository,
+//            JwtService jwtService) {
 //        return args -> {
 //            var admin = RegisterRequest.builder()
-//                    .email("aniyar.durmagambetova@nu.edu.kz")
+//                    .email("adminApartX@gmail.com")
 //                    .password("password")
 //                    .role(ADMIN)
 //                    .build();
-//            System.out.println("Admin (aniyar) token: " + service.register(admin).getAccessToken());
+//            service.register(admin);
+//            User adminUser = repository.findByEmail("adminApartX@gmail.com").orElseThrow(UserAlreadyExistsException::new);
+//            System.out.println("Admin (aniyar) token: " + jwtService.generateToken(adminUser));
 //
-//            var cleaner = RegisterRequest.builder()
-//                    .email("durmagambetovaa4@gmail.com")
-//                    .password("password")
-//                    .role(CLEANER)
-//                    .build();
-//            System.out.println("CLEANER token: " + service.register(cleaner).getAccessToken());
+////            var cleaner = RegisterRequest.builder()
+////                    .email("durmagambetovaa4@gmail.com")
+////                    .password("password")
+////                    .role(CLEANER)
+////                    .build();
+////            System.out.println("CLEANER token: " + service.register(cleaner).getAccessToken());
 //
 //        };
 //    }

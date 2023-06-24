@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -36,6 +38,9 @@ public class User implements UserDetails {
   private Role role;
   private String code;
   private Boolean approved;
+
+  private String imageUrl;
+  private BigDecimal rating;
 
   @OneToMany(mappedBy = "user")
   private List<Token> tokens;
