@@ -67,7 +67,8 @@ public class LandLordService {
     public Iterable<Apartment> getApartments(UserDetails userDetails) throws LandLordNotFoundException, UserNotFoundException {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
         LandLord landLord = llRepository.findByUser_Id(user.getId()).orElseThrow(LandLordNotFoundException::new);
-        return aptRepository.findAllByLandLord_Id(landLord.getId());
+        Iterable<Apartment> apts = aptRepository.findAllByLandLord_Id(landLord.getId());
+        return apts;
     }
 
 	public void postOrder(UserDetails userDetails, CreateOrderRequest request) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException {

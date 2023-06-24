@@ -10,6 +10,7 @@ import com.hackathon.apartxhackathon.repository.LandLordRepository;
 import com.hackathon.apartxhackathon.repository.UserRepository;
 import com.hackathon.apartxhackathon.request.CreateApartmentRequest;
 import com.hackathon.apartxhackathon.request.CreateOrderRequest;
+import com.hackathon.apartxhackathon.response.ApartmentResponse;
 import com.hackathon.apartxhackathon.service.LandLordService;
 import com.hackathon.apartxhackathon.user.User;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/v1/landlord")
@@ -31,10 +34,24 @@ public class LandLordController {
     private final UserRepository userRepository;
     private final LandLordService service;
 
-    @GetMapping
+    @GetMapping("/apartments")
     @PreAuthorize("hasAuthority('landlord:create')")
-    public ResponseEntity<Iterable<Apartment>> getApartments(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException, LandLordNotFoundException {
-        return ResponseEntity.ok(service.getApartments(userDetails));
+    public ResponseEntity<List<ApartmentResponse>> getApartments(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException, LandLordNotFoundException {
+        return ResponseEntity.ok(
+                StreamSupport
+                        .stream(service.getApartments(userDetails)
+                                .spliterator(), false)
+                        .map(apartment -> ApartmentResponse
+                                .builder()
+                                .id(apartment.getId())
+                                .landLordId(apartment.getLandLord().getId())
+                                .address(apartment.getAddress())
+                                .cityId(apartment.getCity().getId())
+                                .roomNumber(apartment.getRoomNumber())
+                                .description(apartment.getDescription())
+                                .area(apartment.getArea())
+                                        .build()
+                                ).collect(Collectors.toList()));
     }
 
     @PostMapping("/add_apartment")

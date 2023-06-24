@@ -46,12 +46,20 @@ public class SecurityConfiguration {
             .requestMatchers(POST, "/api/v1/cleaner/**").hasAnyAuthority(ADMIN_CREATE.name(), CLEANER_CREATE.name())
             .requestMatchers(PUT, "/api/v1/cleaner/**").hasAnyAuthority(ADMIN_UPDATE.name(), CLEANER_UPDATE.name())
             .requestMatchers(DELETE, "/api/v1/cleaner/**").hasAnyAuthority(ADMIN_DELETE.name(), CLEANER_DELETE.name())
+
             .requestMatchers("/api/v1/admin/**").hasRole(ADMIN.name())
             .requestMatchers(GET, "/api/v1/admin/**").hasAuthority(ADMIN_READ.name())
             .requestMatchers(POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
             .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
             .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
+
             .requestMatchers("/api/v1/user/**").hasAnyRole(USER.name(), ADMIN.name(), LANDLORD.name(), CLEANER.name())
+
+            .requestMatchers("/api/v1/landlord/**").hasAnyRole(ADMIN.name(), LANDLORD.name())
+            .requestMatchers(GET, "/api/v1/landlord/**").hasAnyAuthority(ADMIN_READ.name(), LANDLORD_READ.name())
+            .requestMatchers(POST, "/api/v1/landlord/**").hasAnyAuthority(ADMIN_CREATE.name(), LANDLORD_CREATE.name())
+            .requestMatchers(PUT, "/api/v1/landlord/**").hasAnyAuthority(ADMIN_UPDATE.name(), LANDLORD_UPDATE.name())
+            .requestMatchers(DELETE, "/api/v1/landlord/**").hasAnyAuthority(ADMIN_DELETE.name(), LANDLORD_DELETE.name())
 
             .requestMatchers(
                     "/api/v1/home/**",
