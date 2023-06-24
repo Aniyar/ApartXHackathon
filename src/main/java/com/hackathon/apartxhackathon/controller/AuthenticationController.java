@@ -57,7 +57,7 @@ public class AuthenticationController {
     service.refreshToken(request, response);
   }
 
-  @GetMapping("/getinfo")
+  @PostMapping("/getinfo")
   public ResponseEntity<UserInfoResponse> getInfo(
           @AuthenticationPrincipal UserDetails userDetails
           ) throws UserNotFoundException {
