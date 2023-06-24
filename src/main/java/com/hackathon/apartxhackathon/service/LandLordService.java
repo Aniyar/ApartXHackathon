@@ -4,10 +4,7 @@ import com.hackathon.apartxhackathon.exception.ApartmentNotFoundException;
 import com.hackathon.apartxhackathon.exception.CityNotFoundException;
 import com.hackathon.apartxhackathon.exception.LandLordNotFoundException;
 import com.hackathon.apartxhackathon.exception.UserNotFoundException;
-import com.hackathon.apartxhackathon.model.Apartment;
-import com.hackathon.apartxhackathon.model.LandLord;
-import com.hackathon.apartxhackathon.model.Order;
-import com.hackathon.apartxhackathon.model.ServiceType;
+import com.hackathon.apartxhackathon.model.*;
 import com.hackathon.apartxhackathon.repository.*;
 import com.hackathon.apartxhackathon.request.CreateApartmentRequest;
 import com.hackathon.apartxhackathon.request.CreateOrderRequest;
@@ -90,10 +87,12 @@ public class LandLordService {
         Order order = Order.builder()
                 .description(request.getDescription())
                 .landlord(landLord)
+                .apartment(apartment)
                 .dateAndTime(request.getDateTime())
                 .createdAt(LocalDateTime.now())
                 .desiredPrice(request.getDesiredPrice())
                 .serviceTypeList(services)
+                .status(OrderStatus.CREATED)
                 .build();
 
         orderRepository.save(order);

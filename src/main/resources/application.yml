@@ -1,18 +1,18 @@
 spring:
-#  datasource:
-#    url: jdbc:postgresql://localhost:32768/postgres
-#    username: postgres
-#    password: password
-#    driver-class-name: org.postgresql.Driver
-
   datasource:
-    url: jdbc:postgresql://ec2-54-78-142-10.eu-west-1.compute.amazonaws.com:5432/deke70hfmircfo
-    username: pxcxxkqezhajco
-    password: ec0d6df02ec008cd06633147cab5d9c2d661eca1e08af6e8f832712f5388c2a2
+    url: jdbc:postgresql://localhost:32768/postgres
+    username: postgres
+    password: password
     driver-class-name: org.postgresql.Driver
+#
+#  datasource:
+#    url: jdbc:postgresql://ec2-54-78-142-10.eu-west-1.compute.amazonaws.com:5432/deke70hfmircfo
+#    username: pxcxxkqezhajco
+#    password: ec0d6df02ec008cd06633147cab5d9c2d661eca1e08af6e8f832712f5388c2a2
+#    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: false
     properties:
       hibernate:

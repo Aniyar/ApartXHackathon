@@ -31,12 +31,18 @@ public class Order {
     @EqualsAndHashCode.Exclude
     private Cleaner cleaner;
 
+    @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Apartment apartment;
+
     private String description;
 
     @ManyToMany
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<ServiceType> serviceTypeList;
+    private CleaningType cleaningType;
 
     private Integer desiredPrice;
     private LocalDateTime dateAndTime;
@@ -44,18 +50,12 @@ public class Order {
     private Integer landLordRating;
     private Integer cleanerRating;
 
-    private Boolean approved;
-
-    private Boolean finished;
-
-
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime approvedAt;
 
     private LocalDateTime finishedAt;
-
-
-
 }
