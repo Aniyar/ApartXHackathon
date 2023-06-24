@@ -57,11 +57,6 @@ public class AuthenticationController {
     service.refreshToken(request, response);
   }
 
-  @GetMapping("/getinfo")
-  public ResponseEntity<UserInfoResponse> getInfo(
-          @AuthenticationPrincipal UserDetails userDetails
-          ) throws UserNotFoundException {
-    return ResponseEntity.ok(service.getInfo(userDetails));
-  }
+
 
 }
