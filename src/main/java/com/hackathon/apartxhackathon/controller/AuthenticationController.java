@@ -22,13 +22,13 @@ import com.hackathon.apartxhackathon.service.AuthenticationService;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
   private final AuthenticationService service;
 
-  @PostMapping("/auth/register")
+  @PostMapping("/register")
   public ResponseEntity register(
       @RequestBody RegisterRequest request
   ) throws UserAlreadyExistsException {
@@ -36,20 +36,20 @@ public class AuthenticationController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/auth/verify")
+  @PostMapping("/verify")
   public ResponseEntity<AuthenticationResponse> verify(
           @RequestBody VerifyEmailRequest request
   ) throws IncorrectVerificationCodeException, UserNotFoundException {
     return ResponseEntity.ok(service.verify(request));
   }
-  @PostMapping("/auth/authenticate")
+  @PostMapping("/authenticate")
   public ResponseEntity<AuthenticationResponse> authenticate(
       @RequestBody AuthenticationRequest request
   ) {
     return ResponseEntity.ok(service.authenticate(request));
   }
 
-  @PostMapping("/auth/refresh-token")
+  @PostMapping("/refresh-token")
   public void refreshToken(
       HttpServletRequest request,
       HttpServletResponse response
@@ -57,7 +57,7 @@ public class AuthenticationController {
     service.refreshToken(request, response);
   }
 
-  @PostMapping("/getinfo")
+  @GetMapping("/getinfo")
   public ResponseEntity<UserInfoResponse> getInfo(
           @AuthenticationPrincipal UserDetails userDetails
           ) throws UserNotFoundException {
