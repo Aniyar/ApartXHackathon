@@ -31,7 +31,7 @@ public class LandLordController {
     private final UserRepository userRepository;
     private final LandLordService service;
 
-    @PostMapping
+    @GetMapping
     @PreAuthorize("hasAuthority('landlord:create')")
     public ResponseEntity<Iterable<Apartment>> getApartments(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException, LandLordNotFoundException {
         return ResponseEntity.ok(service.getApartments(userDetails));
