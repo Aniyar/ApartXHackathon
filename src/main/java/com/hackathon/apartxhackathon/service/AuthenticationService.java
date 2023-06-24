@@ -12,6 +12,7 @@ import com.hackathon.apartxhackathon.request.AuthenticationRequest;
 import com.hackathon.apartxhackathon.request.RegisterRequest;
 import com.hackathon.apartxhackathon.request.VerifyEmailRequest;
 import com.hackathon.apartxhackathon.response.AuthenticationResponse;
+import com.hackathon.apartxhackathon.response.UserInfoResponse;
 import com.hackathon.apartxhackathon.token.Token;
 import com.hackathon.apartxhackathon.token.TokenRepository;
 import com.hackathon.apartxhackathon.token.TokenType;
@@ -178,4 +179,18 @@ public class AuthenticationService {
   }
 
 
+  public UserInfoResponse getInfo(UserDetails userDetails) throws UserNotFoundException {
+    if (userDetails == null){
+      throw new UserNotFoundException();
+    }
+    User user = repository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+    UserInfoResponse info = UserInfoResponse.builder()
+                                            .firstname(user.getFirstname())
+                                            .lastname(user.getLastname())
+                                            .iin(user.getIin())
+                                            .role(user.getRole())
+                                            .email(user.getEmail())
+                                            .build();
+    return info;
+  }
 }
