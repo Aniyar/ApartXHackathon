@@ -36,6 +36,8 @@ public class SecurityConfiguration {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
+            .cors()
+            .and()
             .csrf()
             .disable()
             .authorizeRequests()
@@ -49,11 +51,6 @@ public class SecurityConfiguration {
             .requestMatchers(POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
             .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
             .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
-            .requestMatchers("/api/v1/user/**").hasAnyRole(ADMIN.name(), LANDLORD.name(), CLEANER.name())
-            .requestMatchers(GET, "/api/v1/user/**").hasAnyAuthority(ADMIN_READ.name(), LANDLORD_READ.name(), CLEANER_READ.name())
-            .requestMatchers(POST, "/api/v1/user/**").hasAnyAuthority(ADMIN_CREATE.name(), LANDLORD_CREATE.name(), CLEANER_CREATE.name())
-            .requestMatchers(PUT, "/api/v1/user/**").hasAnyAuthority(ADMIN_UPDATE.name(), LANDLORD_UPDATE.name(), CLEANER_UPDATE.name())
-            .requestMatchers(DELETE, "/api/v1/user/**").hasAnyAuthority(ADMIN_DELETE.name(), LANDLORD_DELETE.name(), CLEANER_DELETE.name())
             .requestMatchers(
                     "/api/v1/home/**",
                     "/api/v1/auth/**",
@@ -86,4 +83,12 @@ public class SecurityConfiguration {
     return http.build();
   }
 }
+
+
+
+//.requestMatchers("/api/v1/user/**").hasAnyRole(ADMIN.name(), LANDLORD.name(), CLEANER.name())
+//        .requestMatchers(GET, "/api/v1/user/**").hasAnyAuthority(ADMIN_READ.name(), LANDLORD_READ.name(), CLEANER_READ.name())
+//        .requestMatchers(POST, "/api/v1/user/**").hasAnyAuthority(ADMIN_CREATE.name(), LANDLORD_CREATE.name(), CLEANER_CREATE.name())
+//        .requestMatchers(PUT, "/api/v1/user/**").hasAnyAuthority(ADMIN_UPDATE.name(), LANDLORD_UPDATE.name(), CLEANER_UPDATE.name())
+//        .requestMatchers(DELETE, "/api/v1/user/**").hasAnyAuthority(ADMIN_DELETE.name(), LANDLORD_DELETE.name(), CLEANER_DELETE.name())
 
