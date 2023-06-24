@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface LandLordRepository extends JpaRepository<LandLord, Integer> {
-    Optional<LandLord> findByUser(User user);
+    Optional<LandLord> findByUser_Id(Integer userId);
 
 
 }

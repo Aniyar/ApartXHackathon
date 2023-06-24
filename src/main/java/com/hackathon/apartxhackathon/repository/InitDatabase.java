@@ -3,6 +3,8 @@ package com.hackathon.apartxhackathon.repository;
 import com.hackathon.apartxhackathon.exception.UserAlreadyExistsException;
 import com.hackathon.apartxhackathon.exception.UserNotFoundException;
 import com.hackathon.apartxhackathon.model.City;
+import com.hackathon.apartxhackathon.model.Cleaner;
+import com.hackathon.apartxhackathon.model.LandLord;
 import com.hackathon.apartxhackathon.model.ServiceType;
 import com.hackathon.apartxhackathon.request.RegisterRequest;
 import com.hackathon.apartxhackathon.service.AuthenticationService;
@@ -12,6 +14,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 @Component
@@ -20,6 +24,8 @@ public class InitDatabase {
 	private final ServiceTypeRepository serviceRepository;
 	private final CityRepository cityRepository;
 	private final UserRepository userRepository;
+	private final LandLordRepository landLordRepository;
+	private final CleanerRepository cleanerRepository;
 	private final AuthenticationService authService;
 
 	@PostConstruct
@@ -55,7 +61,7 @@ public class InitDatabase {
 
 		if (userRepository.count() == 0){
 			RegisterRequest adminReq = RegisterRequest.builder()
-					.email("durmagambetovaa4@gmail.com")
+					.email("adminApartX@gmail.com")
 					.firstname("Admin")
 					.lastname("ApartX")
 					.password("admin")
@@ -64,7 +70,7 @@ public class InitDatabase {
 					.build();
 
 			authService.register(adminReq);
-			User admin = userRepository.findByEmail("durmagambetovaa4@gmail.com").orElseThrow(UserNotFoundException::new);
+			User admin = userRepository.findByEmail("adminApartX@gmail.com").orElseThrow(UserNotFoundException::new);
 			admin.setApproved(true);
 
 
@@ -97,6 +103,12 @@ public class InitDatabase {
 
 
 			userRepository.saveAll(List.of(admin, landlord, cleaner));
+
+			LandLord ll = LandLord.builder().user(landlord).build();
+			landLordRepository.save(ll);
+
+			Cleaner cc = Cleaner.builder().user(cleaner).birthdate(LocalDate.of(2000, Month.AUGUST, 21)).build();
+			cleanerRepository.save(cc);
 		}
 	}
 }

@@ -2,10 +2,7 @@ package com.hackathon.apartxhackathon.model;
 
 import com.hackathon.apartxhackathon.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,7 +16,9 @@ import java.util.List;
 public class LandLord {
     @Id @GeneratedValue
     private Integer id;
-    @OneToOne
+    @OneToOne @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
     private BigDecimal rating;
 

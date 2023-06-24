@@ -34,14 +34,15 @@ public class LandLordService {
 
     public ResponseEntity addApartment(UserDetails userDetails, CreateApartmentRequest request) throws UserNotFoundException, LandLordNotFoundException, CityNotFoundException {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
-        LandLord landLord = llRepository.findByUser(user).orElseThrow(LandLordNotFoundException::new);
+        LandLord landLord = llRepository.findByUser_Id(user.getId()).orElseThrow(LandLordNotFoundException::new);
 
         Apartment apartment = Apartment.builder()
-                                        .address(request.getAddress())
-                                        .city(cityRepository.findById(request.getCityId()).orElseThrow(CityNotFoundException::new))
                                         .landLord(landLord)
-                                        .roomNumber(request.getRoomNumber())
+                                        .city(cityRepository.findById(request.getCityId()).orElseThrow(CityNotFoundException::new))
+                                        .address(request.getAddress())
                                         .area(request.getArea())
+                                        .roomNumber(request.getRoomNumber())
+                                        .description(request.getDescription())
                                         .build();
         aptRepository.save(apartment);
         return ResponseEntity.ok().build();
@@ -51,7 +52,7 @@ public class LandLordService {
 
     public ResponseEntity deleteApartment(UserDetails userDetails, Integer apartmentId) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
-        LandLord landLord = llRepository.findByUser(user).orElseThrow(LandLordNotFoundException::new);
+        LandLord landLord = llRepository.findByUser_Id(user.getId()).orElseThrow(LandLordNotFoundException::new);
         Apartment apt = aptRepository.findById(apartmentId).orElseThrow(ApartmentNotFoundException::new);
 
         if (apt.getLandLord() == landLord){
@@ -64,13 +65,13 @@ public class LandLordService {
 
     public Iterable<Apartment> getApartments(UserDetails userDetails) throws LandLordNotFoundException, UserNotFoundException {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
-        LandLord landLord = llRepository.findByUser(user).orElseThrow(LandLordNotFoundException::new);
+        LandLord landLord = llRepository.findByUser_Id(user.getId()).orElseThrow(LandLordNotFoundException::new);
         return aptRepository.findAllByLandLord(landLord);
     }
 
 	public void postOrder(UserDetails userDetails, CreateOrderRequest request) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
-        LandLord landLord = llRepository.findByUser(user).orElseThrow(LandLordNotFoundException::new);
+        LandLord landLord = llRepository.findByUser_Id(user.getId()).orElseThrow(LandLordNotFoundException::new);
         Apartment apartment = aptRepository.findById(request.getApartmentId()).orElseThrow(ApartmentNotFoundException::new);
         if (apartment.getLandLord() != landLord){
             throw new ApartmentNotFoundException();

@@ -12,10 +12,8 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +32,10 @@ public class User implements UserDetails {
   private String email;
   private String password;
 
+  private String firstname;
+  private String lastname;
+  private String iin;
+
   @Enumerated(EnumType.STRING)
   private Role role;
   private String code;
@@ -43,6 +45,8 @@ public class User implements UserDetails {
   private BigDecimal rating;
 
   @OneToMany(mappedBy = "user")
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private List<Token> tokens;
 
   @Override

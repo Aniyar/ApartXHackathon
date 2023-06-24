@@ -1,6 +1,7 @@
 package com.hackathon.apartxhackathon.request;
 
 import com.hackathon.apartxhackathon.model.City;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

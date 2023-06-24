@@ -3,10 +3,7 @@ package com.hackathon.apartxhackathon.model;
 
 import com.hackathon.apartxhackathon.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,14 +22,20 @@ public class Order {
     private Integer id;
 
     @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private LandLord landlord;
 
     @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Cleaner cleaner;
 
     private String description;
 
     @ManyToMany
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<ServiceType> serviceTypeList;
 
     private Integer desiredPrice;

@@ -29,10 +29,11 @@ public class AuthenticationController {
   private final AuthenticationService service;
 
   @PostMapping("/register")
-  public ResponseEntity<User> register(
+  public ResponseEntity register(
       @RequestBody RegisterRequest request
   ) throws UserAlreadyExistsException {
-    return ResponseEntity.ok(service.register(request));
+    service.register(request);
+    return ResponseEntity.ok().build();
   }
 
   @PostMapping("/verify")

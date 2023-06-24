@@ -2,10 +2,7 @@ package com.hackathon.apartxhackathon.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
@@ -20,10 +17,14 @@ public class Apartment {
 
     @ManyToOne
     @NotNull
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private LandLord landLord;
 
     @NotNull
     @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private City city;
     @NotNull
     private String address;
@@ -34,7 +35,6 @@ public class Apartment {
     @NotNull
     private Integer roomNumber;
 
-    @NotNull
     private String description;
 
     // Constructors, getters, and setters

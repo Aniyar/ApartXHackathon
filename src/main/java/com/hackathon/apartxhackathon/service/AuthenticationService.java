@@ -47,19 +47,23 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
   private final EmailService emailService;
 
-  public User register(RegisterRequest request) throws UserAlreadyExistsException {
+  public void register(RegisterRequest request) throws UserAlreadyExistsException {
     if (repository.findByEmail(request.getEmail()).isPresent()){
       throw new UserAlreadyExistsException();
     }
     var user = User.builder()
             .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
+            .iin(request.getIin())
+            .firstname(request.getFirstname())
+            .lastname(request.getLastname())
             .role(request.getRole())
             .code(generateRandomCode())
             .approved(false)
             .build();
     emailService.sendAuthorizationCode(user.getEmail(), user.getCode());
-    return repository.save(user);
+    repository.save(user);
+
   }
 
   public AuthenticationResponse verify(VerifyEmailRequest request) throws UserNotFoundException, IncorrectVerificationCodeException {
