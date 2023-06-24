@@ -17,8 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import static com.hackathon.apartxhackathon.user.Permission.*;
-import static com.hackathon.apartxhackathon.user.Role.ADMIN;
-import static com.hackathon.apartxhackathon.user.Role.CLEANER;
+import static com.hackathon.apartxhackathon.user.Role.*;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -50,6 +49,7 @@ public class SecurityConfiguration {
             .requestMatchers(POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
             .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
             .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
+            .requestMatchers("/api/v1/user/**").hasAnyRole(ADMIN.name(), LANDLORD.name(), CLEANER.name())
             .requestMatchers(GET, "/api/v1/user/**").hasAnyAuthority(ADMIN_READ.name(), LANDLORD_READ.name(), CLEANER_READ.name())
             .requestMatchers(POST, "/api/v1/user/**").hasAnyAuthority(ADMIN_CREATE.name(), LANDLORD_CREATE.name(), CLEANER_CREATE.name())
             .requestMatchers(PUT, "/api/v1/user/**").hasAnyAuthority(ADMIN_UPDATE.name(), LANDLORD_UPDATE.name(), CLEANER_UPDATE.name())
