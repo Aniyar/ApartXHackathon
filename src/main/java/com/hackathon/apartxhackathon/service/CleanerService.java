@@ -10,6 +10,7 @@ import com.hackathon.apartxhackathon.repository.OrderResponseRepository;
 import com.hackathon.apartxhackathon.repository.UserRepository;
 import com.hackathon.apartxhackathon.request.CleanerRespondRequest;
 import com.hackathon.apartxhackathon.model.OrderCleanerResponse;
+import com.hackathon.apartxhackathon.response.CleanerBetResponse;
 import com.hackathon.apartxhackathon.response.OrderResponse;
 import com.hackathon.apartxhackathon.user.User;
 import lombok.AllArgsConstructor;
@@ -33,18 +34,8 @@ public class CleanerService {
 		Iterable<Order> orders = orderRepository.findByStatusInOrderByCreatedAtDesc(List.of(OrderStatus.CREATED, OrderStatus.BETTING));
 		return StreamSupport
 				.stream(orders.spliterator(), false)
-				.map(order -> OrderResponse.builder()
-						.id(order.getId())
-						.landLordId(order.getLandlord().getId())
-						.orderStatus(order.getStatus())
-						.apartmentId(order.getApartment().getId())
-						.description(order.getDescription())
-						.dateTime(order.getDateAndTime())
-						.serviceIds(order.getServiceTypeList().stream().map(serviceType -> serviceType.getId()).collect(Collectors.toList()))
-						.cleaningType(order.getCleaningType())
-						.desiredPrice(order.getDesiredPrice())
-						.cleanerResponses(order.respondedCleanerList)
-						.build()).collect(Collectors.toList());
+				.map(order -> convertOrder(order))
+				.collect(Collectors.toList());
 	}
 
 	public void respond(UserDetails userDetails, CleanerRespondRequest request) throws UserNotFoundException, CleanerNotFoundException, OrderNotFoundException {
@@ -58,11 +49,38 @@ public class CleanerService {
 				.build();
 		orderResponseRepository.save(resp);
 
-		order.respondedCleanerList.add(resp);
 		order.setStatus(OrderStatus.BETTING);
 		orderRepository.save(order);
 
 
 		emailService.sendCleanersUpdate(resp);
+	}
+
+
+	public OrderResponse convertOrder(Order order){
+		Iterable<OrderCleanerResponse> cleanerResponses = orderResponseRepository.findAllByOrder_Id(order.getId());
+		List<CleanerBetResponse> betResponses = StreamSupport.stream(cleanerResponses.spliterator(), false)
+												.map(resp -> CleanerBetResponse.builder()
+														.id(resp.getId())
+															.orderId(order.getId())
+														.cleanerId(resp.getCleaner().getId())
+														.offeredPrice(resp.getOfferedPrice())
+														.build()).collect(Collectors.toList());
+
+		OrderResponse resp = OrderResponse.builder()
+				.id(order.getId())
+				.landLordId(order.getLandlord().getId())
+				.orderStatus(order.getStatus())
+				.apartmentId(order.getApartment().getId())
+				.description(order.getDescription())
+				.dateTime(order.getDateAndTime())
+				.serviceIds(order.getServiceTypeList().stream().map(serviceType -> serviceType.getId()).collect(Collectors.toList()))
+				.cleaningType(order.getCleaningType())
+				.desiredPrice(order.getDesiredPrice())
+				.cleanerResponses(betResponses)
+				.build();
+
+		return resp;
+
 	}
 }

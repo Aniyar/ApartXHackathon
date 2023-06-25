@@ -6,6 +6,7 @@ import com.hackathon.apartxhackathon.repository.*;
 import com.hackathon.apartxhackathon.request.AssignCleanerRequest;
 import com.hackathon.apartxhackathon.request.CreateApartmentRequest;
 import com.hackathon.apartxhackathon.request.CreateOrderRequest;
+import com.hackathon.apartxhackathon.response.CleanerBetResponse;
 import com.hackathon.apartxhackathon.response.OrderResponse;
 import com.hackathon.apartxhackathon.user.User;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class LandLordService {
     private final UserRepository userRepository;
     private final CityRepository cityRepository;
     private final OrderRepository orderRepository;
+    private final OrderResponseRepository orderResponseRepository;
     private final ServiceTypeRepository serviceRepository;
     private final CleanerRepository cleanerRepository;
 
@@ -108,20 +110,9 @@ public class LandLordService {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
         LandLord landLord = llRepository.findByUser_Id(user.getId()).orElseThrow(LandLordNotFoundException::new);
         Iterable<Order> orders = orderRepository.findAllByLandlord_IdOrderByCreatedAtDesc(landLord.getId());
+
         return StreamSupport.stream(orders.spliterator(), false).map(
-                order -> OrderResponse.builder()
-                        .id(order.getId())
-                        .landLordId(landLord.getId())
-                        .orderStatus(order.getStatus())
-                        .apartmentId(order.getApartment().getId())
-                        .description(order.getDescription())
-                        .dateTime(order.getDateAndTime())
-                        .serviceIds(order.getServiceTypeList().stream().map(serviceType -> serviceType.getId()).collect(Collectors.toList()))
-                        .cleaningType(order.getCleaningType())
-                        .desiredPrice(order.getDesiredPrice())
-                        .cleanerResponses(order.getRespondedCleanerList())
-                        .build()
-        ).collect(Collectors.toList());
+                order -> convertOrder(order)).collect(Collectors.toList());
 
     }
 
@@ -141,19 +132,34 @@ public class LandLordService {
     public OrderResponse getOrderById(UserDetails userDetails, Integer id) throws OrderNotFoundException, UserNotFoundException {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
         Order order = orderRepository.findById(id).orElseThrow(OrderNotFoundException::new);
+        OrderResponse resp = convertOrder(order);
+        return resp;
+    }
+
+    public OrderResponse convertOrder(Order order){
+        Iterable<OrderCleanerResponse> cleanerResponses = orderResponseRepository.findAllByOrder_Id(order.getId());
+        List<CleanerBetResponse> betResponses = StreamSupport.stream(cleanerResponses.spliterator(), false)
+                .map(resp -> CleanerBetResponse.builder()
+                        .id(resp.getId())
+                        .orderId(order.getId())
+                        .cleanerId(resp.getCleaner().getId())
+                        .offeredPrice(resp.getOfferedPrice())
+                        .build()).collect(Collectors.toList());
 
         OrderResponse resp = OrderResponse.builder()
-                        .id(order.getId())
-                        .landLordId(order.getLandlord().getId())
-                        .orderStatus(order.getStatus())
-                        .apartmentId(order.getApartment().getId())
-                        .description(order.getDescription())
-                        .dateTime(order.getDateAndTime())
-                        .serviceIds(order.getServiceTypeList().stream().map(serviceType -> serviceType.getId()).collect(Collectors.toList()))
-                        .cleaningType(order.getCleaningType())
-                        .desiredPrice(order.getDesiredPrice())
-                        .cleanerResponses(order.getRespondedCleanerList())
-                        .build();
+                .id(order.getId())
+                .landLordId(order.getLandlord().getId())
+                .orderStatus(order.getStatus())
+                .apartmentId(order.getApartment().getId())
+                .description(order.getDescription())
+                .dateTime(order.getDateAndTime())
+                .serviceIds(order.getServiceTypeList().stream().map(serviceType -> serviceType.getId()).collect(Collectors.toList()))
+                .cleaningType(order.getCleaningType())
+                .desiredPrice(order.getDesiredPrice())
+                .cleanerResponses(betResponses)
+                .build();
+
         return resp;
+
     }
 }

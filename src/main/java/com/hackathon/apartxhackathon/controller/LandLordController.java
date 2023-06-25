@@ -51,6 +51,7 @@ public class LandLordController {
                                         .bathNumber(apartment.getBathNumber())
                                 .description(apartment.getDescription())
                                 .area(apartment.getArea())
+                                        .imageUrls(apartment.getImageUrls())
                                         .build()
                                 ).collect(Collectors.toList()));
     }

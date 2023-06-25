@@ -22,7 +22,8 @@ public class CleanerController {
 	@GetMapping
 	@PreAuthorize("hasAuthority('cleaner:create')")
 	public ResponseEntity<Iterable<OrderResponse>> getNewOrders(){
-		return ResponseEntity.ok(service.getNewOrders());
+		Iterable<OrderResponse> resp = service.getNewOrders();
+		return ResponseEntity.ok(resp);
 	}
 
 

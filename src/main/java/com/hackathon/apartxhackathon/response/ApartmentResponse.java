@@ -3,6 +3,8 @@ package com.hackathon.apartxhackathon.response;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class ApartmentResponse {
@@ -14,4 +16,5 @@ public class ApartmentResponse {
 	private Integer roomNumber;
 	private Integer bathNumber;
 	private String description;
+	private List<String> imageUrls;
 }

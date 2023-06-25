@@ -57,10 +57,10 @@ public class Order {
 
     private LocalDateTime createdAt;
 
-	@OneToMany(mappedBy = "order")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    public List<OrderCleanerResponse> respondedCleanerList;
+//	@OneToMany(mappedBy = "order")
+//    @ToString.Exclude
+//    @EqualsAndHashCode.Exclude
+//    public List<OrderCleanerResponse> respondedCleanerList;
 
     private LocalDateTime approvedAt;
 
@@ -71,17 +71,5 @@ public class Order {
     @Column(name = "image_url")
     private List<String> imageUrls;
 
-    public Optional<Integer> getBestPrice() {
-        if (respondedCleanerList.isEmpty()) {
-            return Optional.empty();
-        }
 
-        return Optional.of(
-                Collections.min(
-                        respondedCleanerList.stream()
-                                .map(OrderCleanerResponse::getOfferedPrice)
-                                .collect(Collectors.toList())
-                )
-        );
-    }
 }
