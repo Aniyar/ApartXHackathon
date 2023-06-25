@@ -15,8 +15,8 @@ public class OrderResponse {
 	private Integer id;
 	private Integer landLordId;
 	private OrderStatus orderStatus;
-	private Integer landLordRating;
-	private Integer cleanerRating;
+//	private Integer landLordRating;
+//	private Integer cleanerRating;
 	private Integer apartmentId;
 	private String description;
 	private LocalDateTime dateTime;

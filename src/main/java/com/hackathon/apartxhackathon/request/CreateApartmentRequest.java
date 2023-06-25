@@ -18,6 +18,7 @@ public class CreateApartmentRequest {
     private String address;
     private Integer area;
     private Integer roomNumber;
+    private Integer bathNumber;
     private String description;
     private List<String> imageUrls;
 }

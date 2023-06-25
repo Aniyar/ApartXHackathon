@@ -42,6 +42,8 @@ public class Order {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<ServiceType> serviceTypeList;
+
+    @Enumerated(EnumType.STRING)
     private CleaningType cleaningType;
 
     private Integer desiredPrice;

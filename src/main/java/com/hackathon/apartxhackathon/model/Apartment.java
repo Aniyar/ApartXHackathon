@@ -18,24 +18,21 @@ public class Apartment {
     private Integer id;
 
     @ManyToOne
-    @NotNull
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private LandLord landLord;
 
-    @NotNull
     @ManyToOne
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private City city;
-    @NotNull
+
     private String address;
 
-    @NotNull
     private Integer area;
 
-    @NotNull
     private Integer roomNumber;
+    private Integer bathNumber;
 
     private String description;
 

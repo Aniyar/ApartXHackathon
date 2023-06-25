@@ -48,6 +48,7 @@ public class LandLordController {
                                 .address(apartment.getAddress())
                                 .cityId(apartment.getCity().getId())
                                 .roomNumber(apartment.getRoomNumber())
+                                        .bathNumber(apartment.getBathNumber())
                                 .description(apartment.getDescription())
                                 .area(apartment.getArea())
                                         .build()
@@ -77,7 +78,8 @@ public class LandLordController {
     @GetMapping("/orders")
     @PreAuthorize("hasAuthority('landlord:create')")
     public ResponseEntity<Iterable<OrderResponse>> getNewOrders(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException {
-        return ResponseEntity.ok(service.getOrders(userDetails));
+        Iterable<OrderResponse> orders = service.getOrders(userDetails);
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/orders/{id}")

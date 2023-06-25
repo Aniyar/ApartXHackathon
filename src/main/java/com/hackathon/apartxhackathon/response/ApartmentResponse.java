@@ -12,5 +12,6 @@ public class ApartmentResponse {
 	private String address;
 	private Integer area;
 	private Integer roomNumber;
+	private Integer bathNumber;
 	private String description;
 }

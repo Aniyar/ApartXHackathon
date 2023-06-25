@@ -41,6 +41,7 @@ public class LandLordService {
                                         .address(request.getAddress())
                                         .area(request.getArea())
                                         .roomNumber(request.getRoomNumber())
+                                        .bathNumber(request.getBathNumber())
                                         .description(request.getDescription())
                                         .imageUrls(request.getImageUrls())
                                         .build();
@@ -95,6 +96,7 @@ public class LandLordService {
                 .desiredPrice(request.getDesiredPrice())
                 .serviceTypeList(services)
                 .status(OrderStatus.CREATED)
+                .cleaningType(request.getCleaningType())
                 .build();
 
         orderRepository.save(order);
