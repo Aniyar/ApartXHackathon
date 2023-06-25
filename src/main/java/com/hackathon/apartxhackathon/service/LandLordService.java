@@ -3,7 +3,6 @@ package com.hackathon.apartxhackathon.service;
 import com.hackathon.apartxhackathon.exception.*;
 import com.hackathon.apartxhackathon.model.*;
 import com.hackathon.apartxhackathon.repository.*;
-import com.hackathon.apartxhackathon.request.AssignCleanerRequest;
 import com.hackathon.apartxhackathon.request.CreateApartmentRequest;
 import com.hackathon.apartxhackathon.request.CreateOrderRequest;
 import com.hackathon.apartxhackathon.response.CleanerBetResponse;
@@ -116,11 +115,16 @@ public class LandLordService {
 
     }
 
-    public void assignOrderCleaner(UserDetails userDetails, AssignCleanerRequest request) throws UserNotFoundException, OrderNotFoundException, CleanerNotFoundException {
-        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
-        Order order = orderRepository.findById(request.getOrderId()).orElseThrow(OrderNotFoundException::new);
-        Cleaner cleaner = cleanerRepository.findById(request.getCleanerId()).orElseThrow(CleanerNotFoundException::new);
+    public void assignOrderCleaner(UserDetails userDetails, Integer cleanerResponseId) throws UserNotFoundException, OrderNotFoundException, CleanerNotFoundException {
 
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+        OrderCleanerResponse bet = orderResponseRepository.findById(cleanerResponseId).get();
+        Order order = orderRepository.findById(bet.getOrder().getId()).orElseThrow(OrderNotFoundException::new);
+
+
+        Cleaner cleaner = cleanerRepository.findById(bet.getCleaner().getId()).orElseThrow(CleanerNotFoundException::new);
+
+        order.setDesiredPrice(bet.getOfferedPrice());
         order.setApprovedAt(LocalDateTime.now());
         order.setStatus(OrderStatus.ASSIGNED);
         order.setCleaner(cleaner);

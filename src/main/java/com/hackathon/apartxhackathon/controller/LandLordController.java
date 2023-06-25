@@ -6,7 +6,6 @@ import com.hackathon.apartxhackathon.model.LandLord;
 import com.hackathon.apartxhackathon.model.OrderStatus;
 import com.hackathon.apartxhackathon.repository.LandLordRepository;
 import com.hackathon.apartxhackathon.repository.UserRepository;
-import com.hackathon.apartxhackathon.request.AssignCleanerRequest;
 import com.hackathon.apartxhackathon.request.CreateApartmentRequest;
 import com.hackathon.apartxhackathon.request.CreateOrderRequest;
 import com.hackathon.apartxhackathon.response.ApartmentResponse;
@@ -92,12 +91,17 @@ public class LandLordController {
 
 
 
-    @PutMapping("/orders")
+    @PutMapping("/orders/approve/{cleanerResponseId}")
     @PreAuthorize("hasAuthority('landlord:create')")
-    public ResponseEntity assignOrderCleaner(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AssignCleanerRequest request) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException, OrderNotFoundException, CleanerNotFoundException {
-        service.assignOrderCleaner(userDetails, request);
+    public ResponseEntity assignOrderCleaner(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Integer cleanerResponseId) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException, OrderNotFoundException, CleanerNotFoundException {
+        service.assignOrderCleaner(userDetails, cleanerResponseId);
         return ResponseEntity.ok().build();
     }
+
+
+
+
+
 
 
 //    @PutMapping("/edit_apartment")
