@@ -6,14 +6,17 @@ import com.hackathon.apartxhackathon.model.City;
 import com.hackathon.apartxhackathon.model.Cleaner;
 import com.hackathon.apartxhackathon.model.LandLord;
 import com.hackathon.apartxhackathon.model.ServiceType;
+import com.hackathon.apartxhackathon.request.CreateApartmentRequest;
 import com.hackathon.apartxhackathon.request.RegisterRequest;
 import com.hackathon.apartxhackathon.service.AuthenticationService;
+import com.hackathon.apartxhackathon.service.LandLordService;
 import com.hackathon.apartxhackathon.user.Role;
 import com.hackathon.apartxhackathon.user.User;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -27,6 +30,8 @@ public class InitDatabase {
 	private final LandLordRepository landLordRepository;
 	private final CleanerRepository cleanerRepository;
 	private final AuthenticationService authService;
+	private final LandLordService llservice;
+	private final ApartmentRepository apartmentRepository;
 
 	@PostConstruct
 	public void initDatabase() throws UserAlreadyExistsException, UserNotFoundException {
@@ -104,11 +109,24 @@ public class InitDatabase {
 
 			userRepository.saveAll(List.of(admin, landlord, cleaner));
 
-			LandLord ll = LandLord.builder().user(landlord).build();
+			LandLord ll = LandLord.builder().user(landlord).rating(BigDecimal.valueOf(5.0)).build();
 			landLordRepository.save(ll);
 
-			Cleaner cc = Cleaner.builder().user(cleaner).birthdate(LocalDate.of(2000, Month.AUGUST, 21)).build();
+			Cleaner cc = Cleaner.builder().user(cleaner).rating(BigDecimal.valueOf(4.0)).birthdate(LocalDate.of(2000, Month.AUGUST, 21)).build();
 			cleanerRepository.save(cc);
 		}
+
+//		if (apartmentRepository.count() == 0){
+//			CreateApartmentRequest req = CreateApartmentRequest.builder()
+//					.address("Орынбор 22")
+//					.cityId(1)
+//					.roomNumber(3)
+//					.area(120)
+//					.description("ЖК Авеста")
+//					.build();
+//			llservice.addApartment()
+//
+//
+//		}
 	}
 }

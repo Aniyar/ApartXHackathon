@@ -1,6 +1,7 @@
 package com.hackathon.apartxhackathon.response;
 
 import com.hackathon.apartxhackathon.model.CleaningType;
+import com.hackathon.apartxhackathon.model.OrderCleanerResponse;
 import com.hackathon.apartxhackathon.model.OrderStatus;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,5 @@ public class OrderResponse {
 	private List<Integer> serviceIds;
 	private CleaningType cleaningType;
 	private Integer desiredPrice;
+	private List<OrderCleanerResponse> cleanerResponses;
 }

@@ -1,16 +1,16 @@
 package com.hackathon.apartxhackathon.controller;
 
-import com.hackathon.apartxhackathon.exception.ApartmentNotFoundException;
-import com.hackathon.apartxhackathon.exception.CityNotFoundException;
-import com.hackathon.apartxhackathon.exception.LandLordNotFoundException;
-import com.hackathon.apartxhackathon.exception.UserNotFoundException;
+import com.hackathon.apartxhackathon.exception.*;
 import com.hackathon.apartxhackathon.model.Apartment;
 import com.hackathon.apartxhackathon.model.LandLord;
+import com.hackathon.apartxhackathon.model.OrderStatus;
 import com.hackathon.apartxhackathon.repository.LandLordRepository;
 import com.hackathon.apartxhackathon.repository.UserRepository;
+import com.hackathon.apartxhackathon.request.AssignCleanerRequest;
 import com.hackathon.apartxhackathon.request.CreateApartmentRequest;
 import com.hackathon.apartxhackathon.request.CreateOrderRequest;
 import com.hackathon.apartxhackathon.response.ApartmentResponse;
+import com.hackathon.apartxhackathon.response.OrderResponse;
 import com.hackathon.apartxhackathon.service.LandLordService;
 import com.hackathon.apartxhackathon.user.User;
 import lombok.AllArgsConstructor;
@@ -72,6 +72,30 @@ public class LandLordController {
         service.postOrder(userDetails, request);
         return ResponseEntity.ok().build();
     }
+
+
+    @GetMapping("/orders")
+    @PreAuthorize("hasAuthority('landlord:create')")
+    public ResponseEntity<Iterable<OrderResponse>> getNewOrders(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException {
+        return ResponseEntity.ok(service.getOrders(userDetails));
+    }
+
+    @GetMapping("/orders/{id}")
+    @PreAuthorize("hasAuthority('landlord:create')")
+    public ResponseEntity<OrderResponse> getNewOrders(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Integer id) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException, OrderNotFoundException {
+
+        return ResponseEntity.ok(service.getOrderById(userDetails, id));
+    }
+
+
+
+    @PutMapping("/orders")
+    @PreAuthorize("hasAuthority('landlord:create')")
+    public ResponseEntity assignOrderCleaner(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AssignCleanerRequest request) throws UserNotFoundException, LandLordNotFoundException, ApartmentNotFoundException, OrderNotFoundException, CleanerNotFoundException {
+        service.assignOrderCleaner(userDetails, request);
+        return ResponseEntity.ok().build();
+    }
+
 
 //    @PutMapping("/edit_apartment")
 //    @PreAuthorize("hasAuthority('landlord:update')")

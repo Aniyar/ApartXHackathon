@@ -16,4 +16,5 @@ public class CreateOrderRequest {
 	private List<Integer> serviceIds;
 	private CleaningType cleaningType;
 	private Integer desiredPrice;
+	private List<String> imageUrls;
 }

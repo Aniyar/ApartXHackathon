@@ -13,5 +13,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 	@Query("SELECT o FROM Order o WHERE o.status IN (:statuses) ORDER BY o.createdAt DESC")
 	Iterable<Order> findByStatusInOrderByCreatedAtDesc(List<OrderStatus> statuses);
 
+	Iterable<Order> findAllByLandlord_IdOrderByCreatedAtDesc(Integer id);
 }
 

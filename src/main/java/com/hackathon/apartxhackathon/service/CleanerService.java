@@ -43,6 +43,7 @@ public class CleanerService {
 						.serviceIds(order.getServiceTypeList().stream().map(serviceType -> serviceType.getId()).collect(Collectors.toList()))
 						.cleaningType(order.getCleaningType())
 						.desiredPrice(order.getDesiredPrice())
+						.cleanerResponses(order.respondedCleanerList)
 						.build()).collect(Collectors.toList());
 	}
 

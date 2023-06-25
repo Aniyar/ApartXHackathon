@@ -20,6 +20,6 @@ public class LandLord {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private User user;
-    private BigDecimal rating;
+    private BigDecimal rating = BigDecimal.valueOf(5.0);
 
 }

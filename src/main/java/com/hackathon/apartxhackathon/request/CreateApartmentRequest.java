@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -17,4 +19,5 @@ public class CreateApartmentRequest {
     private Integer area;
     private Integer roomNumber;
     private String description;
+    private List<String> imageUrls;
 }

@@ -64,6 +64,11 @@ public class Order {
 
     private LocalDateTime finishedAt;
 
+    @ElementCollection
+    @CollectionTable(name = "order_images", joinColumns = @JoinColumn(name = "order_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls;
+
     public Optional<Integer> getBestPrice() {
         if (respondedCleanerList.isEmpty()) {
             return Optional.empty();

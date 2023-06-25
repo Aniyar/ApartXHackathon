@@ -1,13 +1,12 @@
 package com.hackathon.apartxhackathon.service;
 
-import com.hackathon.apartxhackathon.exception.ApartmentNotFoundException;
-import com.hackathon.apartxhackathon.exception.CityNotFoundException;
-import com.hackathon.apartxhackathon.exception.LandLordNotFoundException;
-import com.hackathon.apartxhackathon.exception.UserNotFoundException;
+import com.hackathon.apartxhackathon.exception.*;
 import com.hackathon.apartxhackathon.model.*;
 import com.hackathon.apartxhackathon.repository.*;
+import com.hackathon.apartxhackathon.request.AssignCleanerRequest;
 import com.hackathon.apartxhackathon.request.CreateApartmentRequest;
 import com.hackathon.apartxhackathon.request.CreateOrderRequest;
+import com.hackathon.apartxhackathon.response.OrderResponse;
 import com.hackathon.apartxhackathon.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import javax.management.ServiceNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +29,7 @@ public class LandLordService {
     private final CityRepository cityRepository;
     private final OrderRepository orderRepository;
     private final ServiceTypeRepository serviceRepository;
+    private final CleanerRepository cleanerRepository;
 
     public ResponseEntity addApartment(UserDetails userDetails, CreateApartmentRequest request) throws UserNotFoundException, LandLordNotFoundException, CityNotFoundException {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
@@ -41,6 +42,7 @@ public class LandLordService {
                                         .area(request.getArea())
                                         .roomNumber(request.getRoomNumber())
                                         .description(request.getDescription())
+                                        .imageUrls(request.getImageUrls())
                                         .build();
         aptRepository.save(apartment);
         return ResponseEntity.ok().build();
@@ -99,4 +101,57 @@ public class LandLordService {
 
 
 	}
+
+    public Iterable<OrderResponse> getOrders(UserDetails userDetails) throws LandLordNotFoundException, UserNotFoundException {
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+        LandLord landLord = llRepository.findByUser_Id(user.getId()).orElseThrow(LandLordNotFoundException::new);
+        Iterable<Order> orders = orderRepository.findAllByLandlord_IdOrderByCreatedAtDesc(landLord.getId());
+        return StreamSupport.stream(orders.spliterator(), false).map(
+                order -> OrderResponse.builder()
+                        .id(order.getId())
+                        .landLordId(landLord.getId())
+                        .orderStatus(order.getStatus())
+                        .apartmentId(order.getApartment().getId())
+                        .description(order.getDescription())
+                        .dateTime(order.getDateAndTime())
+                        .serviceIds(order.getServiceTypeList().stream().map(serviceType -> serviceType.getId()).collect(Collectors.toList()))
+                        .cleaningType(order.getCleaningType())
+                        .desiredPrice(order.getDesiredPrice())
+                        .cleanerResponses(order.getRespondedCleanerList())
+                        .build()
+        ).collect(Collectors.toList());
+
+    }
+
+    public void assignOrderCleaner(UserDetails userDetails, AssignCleanerRequest request) throws UserNotFoundException, OrderNotFoundException, CleanerNotFoundException {
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+        Order order = orderRepository.findById(request.getOrderId()).orElseThrow(OrderNotFoundException::new);
+        Cleaner cleaner = cleanerRepository.findById(request.getCleanerId()).orElseThrow(CleanerNotFoundException::new);
+
+        order.setApprovedAt(LocalDateTime.now());
+        order.setStatus(OrderStatus.ASSIGNED);
+        order.setCleaner(cleaner);
+
+        orderRepository.save(order);
+
+    }
+
+    public OrderResponse getOrderById(UserDetails userDetails, Integer id) throws OrderNotFoundException, UserNotFoundException {
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+        Order order = orderRepository.findById(id).orElseThrow(OrderNotFoundException::new);
+
+        OrderResponse resp = OrderResponse.builder()
+                        .id(order.getId())
+                        .landLordId(order.getLandlord().getId())
+                        .orderStatus(order.getStatus())
+                        .apartmentId(order.getApartment().getId())
+                        .description(order.getDescription())
+                        .dateTime(order.getDateAndTime())
+                        .serviceIds(order.getServiceTypeList().stream().map(serviceType -> serviceType.getId()).collect(Collectors.toList()))
+                        .cleaningType(order.getCleaningType())
+                        .desiredPrice(order.getDesiredPrice())
+                        .cleanerResponses(order.getRespondedCleanerList())
+                        .build();
+        return resp;
+    }
 }

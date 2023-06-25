@@ -33,6 +33,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 
 @Service
@@ -78,6 +79,7 @@ public class AuthenticationService {
       if (user.getRole() == Role.CLEANER){
           Cleaner cleaner = Cleaner.builder()
                   .user(user)
+                  .rating(BigDecimal.valueOf(4.0))
                   .build();
           cleanerRepository.save(cleaner);
       }
@@ -85,6 +87,7 @@ public class AuthenticationService {
       if (user.getRole() == Role.LANDLORD){
           LandLord landLord = LandLord.builder()
                   .user(user)
+                  .rating(BigDecimal.valueOf(4.0))
                   .build();
           llRepository.save(landLord);
       }

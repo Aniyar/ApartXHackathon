@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -36,6 +38,11 @@ public class Apartment {
     private Integer roomNumber;
 
     private String description;
+
+    @ElementCollection
+    @CollectionTable(name = "apartment_images", joinColumns = @JoinColumn(name = "apartment_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls;
 
     // Constructors, getters, and setters
 }
