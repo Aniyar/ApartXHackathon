@@ -1,10 +1,12 @@
 package com.hackathon.apartxhackathon.controller;
 
 import com.hackathon.apartxhackathon.exception.CleanerNotFoundException;
+import com.hackathon.apartxhackathon.exception.LandLordNotFoundException;
 import com.hackathon.apartxhackathon.exception.OrderNotFoundException;
 import com.hackathon.apartxhackathon.exception.UserNotFoundException;
 import com.hackathon.apartxhackathon.request.CleanerRespondRequest;
 import com.hackathon.apartxhackathon.response.OrderResponse;
+import com.hackathon.apartxhackathon.response.UserInfoResponse;
 import com.hackathon.apartxhackathon.service.CleanerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,13 @@ public class CleanerController {
 	@PreAuthorize("hasAuthority('cleaner:create')")
 	public ResponseEntity<Iterable<OrderResponse>> getNewOrders(){
 		Iterable<OrderResponse> resp = service.getNewOrders();
+		return ResponseEntity.ok(resp);
+	}
+
+	@GetMapping("/getLandlord/{id}")
+	@PreAuthorize("hasAuthority('cleaner:create')")
+	public ResponseEntity<UserInfoResponse> getLandlord(@PathVariable Integer id) throws LandLordNotFoundException {
+		UserInfoResponse resp = service.getLandlord(id);
 		return ResponseEntity.ok(resp);
 	}
 

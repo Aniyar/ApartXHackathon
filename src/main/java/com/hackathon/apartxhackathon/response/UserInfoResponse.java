@@ -17,4 +17,6 @@ public class UserInfoResponse {
 	private String email;
 	private String iin;
 	private Role role;
+
+
 }

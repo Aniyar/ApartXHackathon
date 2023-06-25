@@ -1,17 +1,16 @@
 package com.hackathon.apartxhackathon.service;
 
 import com.hackathon.apartxhackathon.exception.CleanerNotFoundException;
+import com.hackathon.apartxhackathon.exception.LandLordNotFoundException;
 import com.hackathon.apartxhackathon.exception.OrderNotFoundException;
 import com.hackathon.apartxhackathon.exception.UserNotFoundException;
 import com.hackathon.apartxhackathon.model.*;
-import com.hackathon.apartxhackathon.repository.CleanerRepository;
-import com.hackathon.apartxhackathon.repository.OrderRepository;
-import com.hackathon.apartxhackathon.repository.OrderResponseRepository;
-import com.hackathon.apartxhackathon.repository.UserRepository;
+import com.hackathon.apartxhackathon.repository.*;
 import com.hackathon.apartxhackathon.request.CleanerRespondRequest;
 import com.hackathon.apartxhackathon.model.OrderCleanerResponse;
 import com.hackathon.apartxhackathon.response.CleanerBetResponse;
 import com.hackathon.apartxhackathon.response.OrderResponse;
+import com.hackathon.apartxhackathon.response.UserInfoResponse;
 import com.hackathon.apartxhackathon.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +28,7 @@ public class CleanerService {
 	private final CleanerRepository cleanerRepository;
 	private final EmailService emailService;
 	private final OrderResponseRepository orderResponseRepository;
+	private final LandLordRepository landLordRepository;
 
 	public Iterable<OrderResponse> getNewOrders() {
 		Iterable<Order> orders = orderRepository.findByStatusInOrderByCreatedAtDesc(List.of(OrderStatus.CREATED, OrderStatus.BETTING));
@@ -82,5 +82,16 @@ public class CleanerService {
 
 		return resp;
 
+	}
+
+	public UserInfoResponse getLandlord(Integer id) throws LandLordNotFoundException {
+		LandLord landLord = landLordRepository.findById(id).orElseThrow(LandLordNotFoundException::new);
+		User user = landLord.getUser();
+		return UserInfoResponse.builder()
+				.email(user.getEmail())
+				.iin(user.getIin())
+				.firstname(user.getFirstname())
+				.lastname(user.getLastname())
+				.build();
 	}
 }
