@@ -1,14 +1,14 @@
 package com.hackathon.apartxhackathon.model;
 
 
-import com.hackathon.apartxhackathon.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -55,7 +55,26 @@ public class Order {
 
     private LocalDateTime createdAt;
 
+	@OneToMany(mappedBy = "order")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    public List<OrderCleanerResponse> respondedCleanerList;
+
     private LocalDateTime approvedAt;
 
     private LocalDateTime finishedAt;
+
+    public Optional<Integer> getBestPrice() {
+        if (respondedCleanerList.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(
+                Collections.min(
+                        respondedCleanerList.stream()
+                                .map(OrderCleanerResponse::getOfferedPrice)
+                                .collect(Collectors.toList())
+                )
+        );
+    }
 }

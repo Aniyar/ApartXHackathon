@@ -46,5 +46,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(er, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({ CleanerNotFoundException.class})
+    public final ResponseEntity<ErrorResponse> handleCleanerNotFoundException(CleanerNotFoundException ex){
+        ErrorResponse er = new ErrorResponse(ex.getClass().getName(), HttpStatus.NOT_FOUND.toString(), ex.getMessage(), null);
+        return new ResponseEntity<>(er, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({ OrderNotFoundException.class})
+    public final ResponseEntity<ErrorResponse> handleOrderNotFoundException(OrderNotFoundException ex){
+        ErrorResponse er = new ErrorResponse(ex.getClass().getName(), HttpStatus.NOT_FOUND.toString(), ex.getMessage(), null);
+        return new ResponseEntity<>(er, HttpStatus.NOT_FOUND);
+    }
 
 }
